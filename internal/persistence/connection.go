@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm/schema"
 )
 
-// Singleton - Connection pooling is handled
+// Singleton
 var db *gorm.DB
 var once sync.Once
 
