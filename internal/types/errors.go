@@ -7,4 +7,5 @@ var (
 	ErrRatesInvalidDate                  error = fmt.Errorf("Invalid/Empty date")
 	ErrServiceBillingRecordNotFound      error = fmt.Errorf("Record with given id doesn't exist")
 	ErrServiceBillingInternalServerError error = fmt.Errorf("Something went wrong fetching errors")
+	ErrServiceBillingInvalidOrMissingID  error = fmt.Errorf("BadRequest: ID is missing/invalid")
 )

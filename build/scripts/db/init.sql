@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "vehicle_details" (
     "arrived_at" timestamptz,
     "departed_at" timestamptz,
     "reg_no" text ,             -- vehicle registration no
-    "type" int,
+    "type" text,
     PRIMARY KEY ("id")
 );
 

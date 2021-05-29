@@ -29,6 +29,10 @@ func (s *service) GetVehicleParkingDuration(ctx context.Context, ID string) (tim
 		duration       time.Duration
 		vehicleDetails types.VehicleDetails
 	)
+
+	if ID == "" {
+		return duration, types.ErrServiceBillingInvalidOrMissingID
+	}
 	err := s.db.Table("vehicle_details").Where("id = ?", ID).First(&vehicleDetails).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -45,6 +49,9 @@ func (s *service) GetVehicleParkingCost(ctx context.Context, ID string) (float64
 		cost           float64
 		vehicleDetails types.VehicleDetails
 	)
+	if ID == "" {
+		return cost, types.ErrServiceBillingInvalidOrMissingID
+	}
 	err := s.db.Table("vehicle_details").Where("id = ?", ID).First(&vehicleDetails).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {

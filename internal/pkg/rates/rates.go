@@ -29,7 +29,7 @@ func (s *service) GetRatesByType(vehicleType string, arrivalTime, departureTime 
 		return 0, types.ErrRatesMissingVehicleType
 	}
 
-	if arrivalTime.IsZero() || arrivalTime.After(departureTime) {
+	if arrivalTime.IsZero() || (!departureTime.IsZero() && arrivalTime.After(departureTime)) {
 		return 0, types.ErrRatesInvalidDate
 	}
 
