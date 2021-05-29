@@ -32,7 +32,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	c.SubscribeTopics([]string{conf.MessageService.Topic}, nil)
+	err = c.SubscribeTopics([]string{conf.MessageService.Topic}, nil)
+	if err != nil {
+		panic(err)
+	}
+	defer c.Close()
+
 	for {
 		msg, err := c.ReadMessage(-1)
 		if err == nil {
@@ -42,6 +47,4 @@ func main() {
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 		}
 	}
-
-	c.Close()
 }

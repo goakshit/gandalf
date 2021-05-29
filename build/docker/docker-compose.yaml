@@ -22,18 +22,18 @@ services:
         environment:
             - POSTGRES_USER=dev
             - POSTGRES_HOST=db
-            - KAFKA_SERVER=kafka-1:19092
+            - KAFKA_SERVER=kafka-1:19091,kafka-1:19092,kafka-2:19092,kafka-2:29091,kafka-3:19092,kafka-3:39091
         container_name: "billing-service"
         ports:
             - 80:80
         depends_on:
-            - db
             - zk1
-            # - zk2
-            # - zk3
+            - zk2
+            - zk3
             - kafka-1
-            # - kafka-2
-            # - kafka-3
+            - kafka-2
+            - kafka-3
+            - db
         networks:
             - backend
     zk1:
@@ -46,94 +46,122 @@ services:
             ZOOKEEPER_TICK_TIME: 2000
             ZOOKEEPER_INIT_LIMIT: 5
             ZOOKEEPER_SYNC_LIMIT: 2
-            ZOOKEEPER_SERVERS: zk1:22888:23888
+            ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
         networks:
             - backend
-    # zk2:
-    #     image: confluentinc/cp-zookeeper:5.4.3
-    #     ports:
-    #         - "32181:32181"
-    #     environment:
-    #         ZOOKEEPER_SERVER_ID: 2
-    #         ZOOKEEPER_CLIENT_PORT: 32181
-    #         ZOOKEEPER_TICK_TIME: 2000
-    #         ZOOKEEPER_INIT_LIMIT: 5
-    #         ZOOKEEPER_SYNC_LIMIT: 2
-    #         ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
-    #     networks:
-    #         - backend
     
-    # zk3:
-    #     image: confluentinc/cp-zookeeper:5.4.3
-    #     ports: 
-    #         - "42181:42181"
-    #     environment:
-    #         ZOOKEEPER_SERVER_ID: 3
-    #         ZOOKEEPER_CLIENT_PORT: 42181
-    #         ZOOKEEPER_TICK_TIME: 2000
-    #         ZOOKEEPER_INIT_LIMIT: 5
-    #         ZOOKEEPER_SYNC_LIMIT: 2
-    #         ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
-    #     networks:
-    #         - backend
+    zk2:
+        image: confluentinc/cp-zookeeper:5.4.3
+        ports:
+            - "32181:32181"
+        environment:
+            ZOOKEEPER_SERVER_ID: 2
+            ZOOKEEPER_CLIENT_PORT: 32181
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_INIT_LIMIT: 5
+            ZOOKEEPER_SYNC_LIMIT: 2
+            ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
+        networks:
+            - backend
+    
+    zk3:
+        image: confluentinc/cp-zookeeper:5.4.3
+        ports: 
+            - "42181:42181"
+        environment:
+            ZOOKEEPER_SERVER_ID: 3
+            ZOOKEEPER_CLIENT_PORT: 42181
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_INIT_LIMIT: 5
+            ZOOKEEPER_SYNC_LIMIT: 2
+            ZOOKEEPER_SERVERS: zk1:22888:23888;zk2:32888:33888;zk3:42888:43888
+        networks:
+            - backend
     
     kafka-1:
-        hostname: kafka-1
         image: confluentinc/cp-kafka:5.4.3
         ports:
             - "19092:19092"
             - "19091:19091"
         depends_on:
             - zk1
-            # - zk2
-            # - zk3
+            - zk2
+            - zk3
         environment:
             KAFKA_BROKER_ID: 1
-            KAFKA_ZOOKEEPER_CONNECT: zk1:22181
+            KAFKA_ZOOKEEPER_CONNECT: zk1:22181,zk2:32181,zk3:42181
             KAFKA_LISTENERS: LISTENER_INTERNAL://kafka-1:19092,LISTENER_EXTERNAL://kafka-1:19091
             KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka-1:19092,LISTENER_EXTERNAL://localhost:19091
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
             KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
         networks:
             - backend
+
+    kafka-2:
+        image: confluentinc/cp-kafka:5.4.3
+        ports:
+            - "29092:29092"
+            - "29091:29091"
+        depends_on:
+            - zk1
+            - zk2
+            - zk3
+        environment:
+            KAFKA_BROKER_ID: 2
+            KAFKA_ZOOKEEPER_CONNECT: zk1:22181,zk2:32181,zk3:42181
+            KAFKA_LISTENERS: LISTENER_INTERNAL://kafka-2:19092,LISTENER_EXTERNAL://kafka-2:29091
+            KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka-2:19092,LISTENER_EXTERNAL://localhost:29091
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
+            KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
+        networks:
+            - backend
     
-    # kafka-2:
-    #     hostname: kafka-2
-    #     image: confluentinc/cp-kafka:5.4.3
-    #     ports:
-    #         - "29092:29092"
-    #         - "29091:29091"
-    #     depends_on:
-    #         - zk1
-    #         - zk2
-    #         - zk3
+    kafka-3:
+        image: confluentinc/cp-kafka:5.4.3
+        ports: 
+            - "39092:39092"
+            - "39091:39091"
+        depends_on:
+            - zk1
+            - zk2
+            - zk3
+        environment:
+            KAFKA_BROKER_ID: 3
+            KAFKA_ZOOKEEPER_CONNECT: zk1:22181,zk2:32181,zk3:42181
+            KAFKA_LISTENERS: LISTENER_INTERNAL://kafka-3:19092,LISTENER_EXTERNAL://kafka-3:39091
+            KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka-3:19092,LISTENER_EXTERNAL://localhost:39091
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
+            KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
+        networks:
+            - backend
+    # zookeeper:
+    #     image: confluentinc/cp-zookeeper:5.4.3
+    #     ports: 
+    #         - "22181:22181"
     #     environment:
-    #         KAFKA_BROKER_ID: 2
-    #         KAFKA_ZOOKEEPER_CONNECT: zk1:22181,zk2:32181,zk3:42181
-    #         KAFKA_LISTENERS: LISTENER_INTERNAL://kafka-2:19092,LISTENER_EXTERNAL://kafka-2:29091
-    #         KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka-2:19092,LISTENER_EXTERNAL://localhost:29091
-    #         KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
-    #         KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
+    #         - ZOOKEEPER_SERVER_ID=1
+    #         - ZOOKEEPER_CLIENT_PORT=22181
+    #         - ZOOKEEPER_TICK_TIME=2000
+    #         - ZOOKEEPER_INIT_LIMIT=5
+    #         - ZOOKEEPER_SYNC_LIMIT=2
+    #         - ZOOKEEPER_SERVERS=zookeeper:22888:23888
     #     networks:
     #         - backend
-    
-    # kafka-3:
-    #     hostname: kafka-3
+
+    # kafka:
     #     image: confluentinc/cp-kafka:5.4.3
-    #     ports: 
-    #         - "39092:39092"
-    #         - "39091:39091"
+    #     ports:
+    #         - "19092:19092"
+    #         - "19091:19091"
     #     depends_on:
-    #         - zk1
-    #         - zk2
-    #         - zk3
+    #         - zookeeper
     #     environment:
-    #         KAFKA_BROKER_ID: 3
-    #         KAFKA_ZOOKEEPER_CONNECT: zk1:22181,zk2:32181,zk3:42181
-    #         KAFKA_LISTENERS: LISTENER_INTERNAL://kafka-3:19092,LISTENER_EXTERNAL://kafka-3:39091
-    #         KAFKA_ADVERTISED_LISTENERS: LISTENER_INTERNAL://kafka-3:19092,LISTENER_EXTERNAL://localhost:39091
-    #         KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
-    #         KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL
+    #         - KAFKA_BROKER_ID=1
+    #         - KAFKA_ZOOKEEPER_CONNECT=zookeeper:22181
+    #         - KAFKA_LISTENERS=LISTENER_INTERNAL://kafka:19092,LISTENER_EXTERNAL://kafka:19091
+    #         - KAFKA_ADVERTISED_LISTENERS=LISTENER_INTERNAL://kafka:19092,LISTENER_EXTERNAL://kafka:19091
+    #         - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_INTERNAL:PLAINTEXT,LISTENER_EXTERNAL:PLAINTEXT
+    #         - KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_INTERNAL
     #     networks:
     #         - backend
 networks:
