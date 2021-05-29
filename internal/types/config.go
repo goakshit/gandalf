@@ -11,7 +11,13 @@ type PostgresConfig struct {
 	Timezone     string
 }
 
+type KafkaConfig struct {
+	Topic  string
+	Server string
+}
+
 // Config - Complete application configuration
 type Config struct {
-	Database PostgresConfig
+	Database       PostgresConfig
+	MessageService KafkaConfig
 }

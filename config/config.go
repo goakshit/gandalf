@@ -28,7 +28,7 @@ func getEnvAsInt(key string, defaultValue int) int {
 	return result
 }
 
-func getPostgresConf() types.PostgresConfig {
+func getPostgresConfig() types.PostgresConfig {
 	return types.PostgresConfig{
 		DatabaseName: getEnv("POSTGRES_DB_NAME", "billingdb"),
 		User:         getEnv("POSTGRES_USER", "dev"),
@@ -40,11 +40,19 @@ func getPostgresConf() types.PostgresConfig {
 	}
 }
 
+func getKafkaConfig() types.KafkaConfig {
+	return types.KafkaConfig{
+		Topic:  getEnv("KAFKA_TOPIC", "billing"),
+		Server: getEnv("KAFKA_SERVER", "0.0.0.0:19091"),
+	}
+}
+
 // New - Initialize Configuration
 func New() *types.Config {
 	once.Do(func() {
 		conf = &types.Config{
-			Database: getPostgresConf(),
+			Database:       getPostgresConfig(),
+			MessageService: getKafkaConfig(),
 		}
 	})
 
