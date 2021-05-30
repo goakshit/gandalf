@@ -33,6 +33,22 @@ services:
             - broker
         networks:
             - backend-network
+    consumer:
+        hostname: consumer
+        build:
+            context: ../..
+            dockerfile: ./build/docker/consumer/Dockerfile
+        environment:
+            POSTGRES_USER: dev
+            POSTGRES_HOST: db
+            KAFKA_SERVER: broker:29092
+        container_name: "consumer-service"
+        depends_on:
+            - db
+            - zookeeper
+            - broker
+        networks:
+            - backend-network
     zookeeper:
         image: confluentinc/cp-zookeeper:6.1.1
         hostname: zookeeper
