@@ -20,7 +20,7 @@ func NewBillingService(db *gorm.DB) *service {
 }
 
 func (s *service) CreateVehicleParkingRecord(ctx context.Context, data types.VehicleDetails) error {
-	return s.db.Table("vehicle_details").Create(data).Error
+	return s.db.Table("vehicle_details").Create(&data).Error
 }
 
 func (s *service) GetVehicleParkingDuration(ctx context.Context, ID string) (time.Duration, error) {

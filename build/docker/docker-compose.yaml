@@ -28,9 +28,9 @@ services:
         ports:
             - 80:80
         depends_on:
-            - db
             - zookeeper
             - broker
+            - db
         networks:
             - backend-network
     consumer:
@@ -44,9 +44,9 @@ services:
             KAFKA_SERVER: broker:29092
         container_name: "consumer-service"
         depends_on:
-            - db
             - zookeeper
             - broker
+            - db
         networks:
             - backend-network
     zookeeper:

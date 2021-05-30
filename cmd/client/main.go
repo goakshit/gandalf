@@ -33,13 +33,10 @@ func main() {
 
 	// Produce messages to topic (asynchronously)
 	topic := conf.MessageService.Topic
-	for _, word := range []string{"Welcome", "to", "the", "Confluent", "Kafka", "Golang", "client"} {
-		p.Produce(&kafka.Message{
-			TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-			Value:          []byte(word),
-		}, nil)
-		fmt.Println(word)
-	}
+	p.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		Value:          []byte(`{"reg_no": "JK02JY4439", "type": "two"}`),
+	}, nil)
 
 	// Wait for message deliveries before shutting down
 	p.Flush(15 * 1000)
