@@ -4,9 +4,9 @@ services:
         image: "postgres:11"
         container_name: "billingdb-service"
         environment:
-            - POSTGRES_DB=billingdb
-            - POSTGRES_USER=dev
-            - POSTGRES_HOST_AUTH_METHOD=trust
+            POSTGRES_DB: billingdb
+            POSTGRES_USER: dev
+            POSTGRES_HOST_AUTH_METHOD: trust
         ports:
             - "5432:5432"
         volumes:
@@ -14,25 +14,25 @@ services:
             - /usr/local/var/postgres:/var/lib/postgresql/data
             - /Users/dharakshit/personal/gandalf/build/scripts/db/init.sql:/docker-entrypoint-initdb.d/init.sql
         networks:
-            - backend
+            - backend-network
     billing:
         hostname: billing
         build:
             context: ../..
             dockerfile: ./build/docker/billing/Dockerfile
         environment:
-            - POSTGRES_USER=dev
-            - POSTGRES_HOST=db
-            - KAFKA_SERVER=broker:29092
+            POSTGRES_USER: dev
+            POSTGRES_HOST: db
+            KAFKA_SERVER: broker:29092
         container_name: "billing-service"
         ports:
             - 80:80
         depends_on:
+            - db
             - zookeeper
             - broker
-            - db
         networks:
-            - backend
+            - backend-network
     zookeeper:
         image: confluentinc/cp-zookeeper:6.1.1
         hostname: zookeeper
@@ -43,8 +43,7 @@ services:
             ZOOKEEPER_CLIENT_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
         networks:
-            - backend
-            
+            - backend-network     
     broker:
         image: confluentinc/cp-server:6.1.1
         hostname: broker
@@ -56,11 +55,13 @@ services:
             - "9101:9101"
         environment:
             KAFKA_BROKER_ID: 1
-            KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
             KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://localhost:9092
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
         networks:
-            - backend
+            - backend-network
 networks:
-    backend:
-        driver: bridge
+    backend-network:
+        name: backend-network

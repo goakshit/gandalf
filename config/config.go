@@ -43,7 +43,7 @@ func getPostgresConfig() types.PostgresConfig {
 func getKafkaConfig() types.KafkaConfig {
 	return types.KafkaConfig{
 		Topic:  getEnv("KAFKA_TOPIC", "billing"),
-		Server: getEnv("KAFKA_SERVER", "0.0.0.0:19091"),
+		Server: getEnv("KAFKA_SERVER", "localhost:9092"),
 	}
 }
 

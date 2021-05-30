@@ -10,7 +10,7 @@ import (
 func main() {
 
 	conf := config.New()
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": conf.MessageService.Server})
+	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
 	if err != nil {
 		panic(err)
 	}
