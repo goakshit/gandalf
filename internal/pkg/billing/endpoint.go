@@ -7,21 +7,10 @@ import (
 	"github.com/goakshit/gandalf/internal/types"
 )
 
-// //the endpoint will receive a request, convert to the desired
-// //format, invoke the service and return the response structure
-// func CreateVehicleDetailsRecordsEndpoint(svc billing.Service) endpoint.Endpoint {
-// 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-// 		req := request.(types.VehicleDetails)
-// 		err := svc.CreateVehicleParkingRecord(ctx, req)
-// 		if err != nil {
-// 			return types.CreateVehicleDetailsRecordResponse{StatusCode: http.StatusInternalServerError}, err
-// 		}
-// 		return types.CreateVehicleDetailsRecordResponse{StatusCode: http.StatusOK}, err
-// 	}
-// }
-
-//the endpoint will receive a request, convert to the desired
-//format, invoke the service and return the response structure
+// swagger:route GET /duration/{id}
+// Return a duration of parked vehicle from id
+// responses:
+//	200: types.GetVehicleParkingDurationResponse
 func getVehicleParkingDurationEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(types.GetVehicleDetailsRequest)
@@ -35,8 +24,10 @@ func getVehicleParkingDurationEndpoint(svc Service) endpoint.Endpoint {
 	}
 }
 
-//the endpoint will receive a request, convert to the desired
-//format, invoke the service and return the response structure
+// swagger:route GET /cost/{id}
+// Return the cost of parking vehicle for duration by id
+// responses:
+//	200: types.GetVehicleParkingCostResponse
 func getVehicleParkingCostEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(types.GetVehicleDetailsRequest)

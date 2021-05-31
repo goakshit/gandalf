@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/goakshit/gandalf/internal/persistence"
 	"github.com/goakshit/gandalf/internal/pkg/rates"
 	"github.com/goakshit/gandalf/internal/types"
 	"gorm.io/gorm"
@@ -16,17 +17,17 @@ type Service interface {
 }
 
 type service struct {
-	db *gorm.DB
+	db persistence.DBIface
 }
 
-func NewBillingService(db *gorm.DB) Service {
+func NewBillingService(db persistence.DBIface) Service {
 	return &service{
 		db: db,
 	}
 }
 
 func (s *service) CreateVehicleParkingRecord(ctx context.Context, data types.VehicleDetails) error {
-	return s.db.Table("vehicle_details").Create(&data).Error
+	return s.db.Table("vehicle_details").Create(&data).Error()
 }
 
 func (s *service) GetVehicleParkingDuration(ctx context.Context, ID string) (time.Duration, error) {
@@ -39,7 +40,7 @@ func (s *service) GetVehicleParkingDuration(ctx context.Context, ID string) (tim
 	if ID == "" {
 		return duration, types.ErrServiceBillingInvalidOrMissingID
 	}
-	err := s.db.Table("vehicle_details").Where("id = ?", ID).First(&vehicleDetails).Error
+	err := s.db.Table("vehicle_details").Where("id = ?", ID).First(&vehicleDetails).Error()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return duration, types.ErrServiceBillingRecordNotFound
@@ -58,7 +59,7 @@ func (s *service) GetVehicleParkingCost(ctx context.Context, ID string) (float64
 	if ID == "" {
 		return cost, types.ErrServiceBillingInvalidOrMissingID
 	}
-	err := s.db.Table("vehicle_details").Where("id = ?", ID).First(&vehicleDetails).Error
+	err := s.db.Table("vehicle_details").Where("id = ?", ID).First(&vehicleDetails).Error()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return cost, types.ErrServiceBillingRecordNotFound
