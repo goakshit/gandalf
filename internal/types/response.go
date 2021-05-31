@@ -10,14 +10,12 @@ type GetVehicleDetailsRequest struct {
 
 // swagger:response
 type GetVehicleParkingDurationResponse struct {
-	// DurationInHours
-	// in: DurationInHours
+	// Duration(Hours) for which vehicle was parked
 	DurationInHours float64 `json:"duration_in_hours,omitempty"`
 }
 
 // swagger:response
 type GetVehicleParkingCostResponse struct {
-	// Cost
-	// in: Cost
+	// Cost of parking vehicle for 'X' duration
 	Cost float64 `json:"cost,omitempty"`
 }

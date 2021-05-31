@@ -7,10 +7,10 @@ import (
 	"github.com/goakshit/gandalf/internal/types"
 )
 
-// swagger:route GET /duration/{id}
-// Return a duration of parked vehicle from id
+// swagger:route GET /duration/{id} billing getVehicleParkingDuration
+// Returns the duration of parked vehicle from id
 // responses:
-//	200: types.GetVehicleParkingDurationResponse
+//	200: GetVehicleParkingDurationResponse
 func getVehicleParkingDurationEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(types.GetVehicleDetailsRequest)
@@ -24,10 +24,10 @@ func getVehicleParkingDurationEndpoint(svc Service) endpoint.Endpoint {
 	}
 }
 
-// swagger:route GET /cost/{id}
-// Return the cost of parking vehicle for duration by id
+// swagger:route GET /cost/{id} billing getVehicleParkingCost
+// Returns the cost of parking vehicle for duration by id
 // responses:
-//	200: types.GetVehicleParkingCostResponse
+//	200: GetVehicleParkingCostResponse
 func getVehicleParkingCostEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(types.GetVehicleDetailsRequest)

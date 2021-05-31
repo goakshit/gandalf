@@ -1,0 +1,70 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Billing API that calculates duration \u0026 cost of parking vehicle",
+    "title": "Billing Microservice",
+    "version": "1.0.0"
+  },
+  "basePath": "/api",
+  "paths": {
+    "/cost/{id}": {
+      "get": {
+        "description": "Returns the cost of parking vehicle for duration by id",
+        "tags": [
+          "billing"
+        ],
+        "operationId": "getVehicleParkingCost",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetVehicleParkingCostResponse"
+          }
+        }
+      }
+    },
+    "/duration/{id}": {
+      "get": {
+        "description": "Returns the duration of parked vehicle from id",
+        "tags": [
+          "billing"
+        ],
+        "operationId": "getVehicleParkingDuration",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetVehicleParkingDurationResponse"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "GetVehicleParkingCostResponse": {
+      "description": "",
+      "headers": {
+        "cost": {
+          "type": "number",
+          "format": "double",
+          "description": "Cost of parking vehicle for 'X' duration"
+        }
+      }
+    },
+    "GetVehicleParkingDurationResponse": {
+      "description": "",
+      "headers": {
+        "duration_in_hours": {
+          "type": "number",
+          "format": "double",
+          "description": "Duration(Hours) for which vehicle was parked"
+        }
+      }
+    }
+  }
+}

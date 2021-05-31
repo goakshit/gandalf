@@ -1,9 +1,9 @@
-// Package classification of Billing API
+// Package classification Billing Microservice
 //
-// Documentation for Billing API
+// Billing API that calculates duration & cost of parking vehicle
 //
 //	Schemes: http
-//	BasePath: /
+//	BasePath: /api
 //	Version: 1.0.0
 //
 //	Consumes:
