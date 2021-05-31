@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/goakshit/gandalf/config"
@@ -13,18 +14,38 @@ import (
 )
 
 func main() {
-	fmt.Println("Listening on kafka messages")
 	conf := config.New()
 
-	c, err := kafka.NewConsumer(&kafka.ConfigMap{
+	a, err := kafka.NewAdminClient(&kafka.ConfigMap{
 		"bootstrap.servers": conf.MessageService.Server,
-		"group.id":          "myGroup",
-		"auto.offset.reset": "earliest",
 	})
 	if err != nil {
 		panic(err)
 	}
-	err = c.SubscribeTopics([]string{conf.MessageService.Topic}, nil)
+
+	_, err = a.CreateTopics(
+		context.Background(),
+		[]kafka.TopicSpecification{{
+			Topic:             conf.MessageService.Topic,
+			NumPartitions:     1,
+			ReplicationFactor: 1}},
+	)
+	if err != nil {
+		fmt.Printf("Failed to create topic: %v\n", err)
+		os.Exit(1)
+	}
+
+	c, err := kafka.NewConsumer(&kafka.ConfigMap{
+		"bootstrap.servers":        conf.MessageService.Server,
+		"group.id":                 "myGroup",
+		"auto.offset.reset":        "earliest",
+		"allow.auto.create.topics": true,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	err = c.Subscribe(conf.MessageService.Topic, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -50,6 +71,6 @@ func main() {
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 			continue
 		}
-		fmt.Println("Successfully created record in database")
+		fmt.Println("Successfully created record in database with reg_no: " + vh.RegNo)
 	}
 }

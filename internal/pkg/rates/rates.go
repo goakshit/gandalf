@@ -42,7 +42,7 @@ func (s *service) GetRatesByType(vehicleType string, arrivalTime, departureTime 
 	duration = departureTime.Sub(arrivalTime.UTC()).Hours()
 
 	// If car was parked for less than 1hr, minimum charges will incur.
-	if duration == 0 {
+	if duration < 1 {
 		return ChargesIfDurationLessThanOneHour, nil
 	}
 
