@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/goakshit/gandalf/config"
@@ -31,11 +33,12 @@ func main() {
 		}
 	}()
 
+	rand.Seed(time.Now().UnixNano())
 	// Produce messages to topic (asynchronously)
 	topic := conf.MessageService.Topic
 	p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value:          []byte(`{"reg_no": "JK02JY4439", "type": "two"}`),
+		Value:          []byte(fmt.Sprintf(`{"reg_no": "JK02JY%04d", "type": "two"}`, rand.Intn(9999))),
 	}, nil)
 
 	// Wait for message deliveries before shutting down
