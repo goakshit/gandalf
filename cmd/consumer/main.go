@@ -9,7 +9,7 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/goakshit/gandalf/config"
 	"github.com/goakshit/gandalf/internal/persistence"
-	"github.com/goakshit/gandalf/internal/service/billing"
+	"github.com/goakshit/gandalf/internal/pkg/billing"
 	"github.com/goakshit/gandalf/internal/types"
 )
 
@@ -38,7 +38,7 @@ func main() {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers":        conf.MessageService.Server,
 		"group.id":                 "myGroup",
-		"auto.offset.reset":        "earliest",
+		"auto.offset.reset":        "latest",
 		"allow.auto.create.topics": true,
 	})
 	if err != nil {

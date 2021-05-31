@@ -7,8 +7,7 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/goakshit/gandalf/internal/persistence"
-	"github.com/goakshit/gandalf/internal/service/billing"
-	billingTpt "github.com/goakshit/gandalf/internal/transport/billing"
+	"github.com/goakshit/gandalf/internal/pkg/billing"
 )
 
 func main() {
@@ -31,7 +30,7 @@ func main() {
 
 	// Handlers http
 	svc := billing.NewBillingService(gormInstance)
-	r := billingTpt.NewHttpServer(svc, logger)
+	r := billing.NewHttpServer(svc, logger)
 	logger.Log("msg", "HTTP", "addr", "80")
 	logger.Log("err", http.ListenAndServe(":80", r))
 }

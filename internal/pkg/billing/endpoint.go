@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/go-kit/kit/endpoint"
-	"github.com/goakshit/gandalf/internal/service/billing"
 	"github.com/goakshit/gandalf/internal/types"
 )
 
@@ -23,7 +22,7 @@ import (
 
 //the endpoint will receive a request, convert to the desired
 //format, invoke the service and return the response structure
-func GetVehicleParkingDurationEndpoint(svc billing.Service) endpoint.Endpoint {
+func getVehicleParkingDurationEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(types.GetVehicleDetailsRequest)
 		duration, err := svc.GetVehicleParkingDuration(ctx, req.ID)
@@ -38,7 +37,7 @@ func GetVehicleParkingDurationEndpoint(svc billing.Service) endpoint.Endpoint {
 
 //the endpoint will receive a request, convert to the desired
 //format, invoke the service and return the response structure
-func GetVehicleParkingCostEndpoint(svc billing.Service) endpoint.Endpoint {
+func getVehicleParkingCostEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(types.GetVehicleDetailsRequest)
 		cost, err := svc.GetVehicleParkingCost(ctx, req.ID)

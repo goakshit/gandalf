@@ -7,13 +7,11 @@ import (
 
 	"github.com/go-kit/kit/log"
 	httptransport "github.com/go-kit/kit/transport/http"
-	billingEpt "github.com/goakshit/gandalf/internal/endpoints/billing"
-	billingSvc "github.com/goakshit/gandalf/internal/service/billing"
 	"github.com/goakshit/gandalf/internal/types"
 	"github.com/gorilla/mux"
 )
 
-func NewHttpServer(svc billingSvc.Service, logger log.Logger) *mux.Router {
+func NewHttpServer(svc Service, logger log.Logger) *mux.Router {
 	//options provided by the Go kit to facilitate error control
 	options := []httptransport.ServerOption{
 		httptransport.ServerErrorLogger(logger),
@@ -21,7 +19,7 @@ func NewHttpServer(svc billingSvc.Service, logger log.Logger) *mux.Router {
 	}
 	//definition of a handler
 	getParkingDurationHandler := httptransport.NewServer(
-		billingEpt.GetVehicleParkingDurationEndpoint(svc),
+		getVehicleParkingDurationEndpoint(svc),
 		decodeBillingRequest, //converts the parameters received via the request body into the struct expected by the endpoint
 		encodeResponse,       //converts the struct returned by the endpoint to a json response
 		options...,
@@ -29,7 +27,7 @@ func NewHttpServer(svc billingSvc.Service, logger log.Logger) *mux.Router {
 
 	//definition of a handler
 	getParkingCostHandler := httptransport.NewServer(
-		billingEpt.GetVehicleParkingCostEndpoint(svc),
+		getVehicleParkingCostEndpoint(svc),
 		decodeBillingRequest, //converts the parameters received via the request body into the struct expected by the endpoint
 		encodeResponse,       //converts the struct returned by the endpoint to a json response
 		options...,

@@ -9,11 +9,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type Service interface {
+	CreateVehicleParkingRecord(ctx context.Context, data types.VehicleDetails) error
+	GetVehicleParkingDuration(ctx context.Context, ID string) (time.Duration, error)
+	GetVehicleParkingCost(ctx context.Context, ID string) (float64, error)
+}
+
 type service struct {
 	db *gorm.DB
 }
 
-func NewBillingService(db *gorm.DB) *service {
+func NewBillingService(db *gorm.DB) Service {
 	return &service{
 		db: db,
 	}
