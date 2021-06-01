@@ -23,9 +23,9 @@ Docker-compose starts up the services mentioned above.
 6. `client`: Pushes the vehicle information to Kafka. To exec: **go run ./cmd/client** 
 
 #### Swagger Docs
-To generate swagger json: Need to have the swagger CLI 
-`swagger generate spec -o ./swagger.json --scan-models`
+To generate swagger json: 
+Need to have the swagger CLI then `swagger generate spec -o ./swagger.json --scan-models`
+or exec `make`
 
 #### Tests
-Mocks are added for persistence(DB layer). Tests are added for billing service. 
-`go test ./internal/pkg/billing`
+Mocks are added for persistence(DB layer). Tests are added for billing service. To exec: `go test ./internal/pkg/billing`
